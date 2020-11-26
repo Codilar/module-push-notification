@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * db_schema.xml
+ *
+ * @copyright Copyright © 2020 Codilar Technologies Pvt. Ltd.. All rights reserved.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="codilar_push_notification" resource="default" engine="innodb" comment="Codilar Push Notification">
+        <column xsi:type="int" name="user_id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="varchar" name="token" comment="Token" length="1024"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="true" comment="Customer ID"/>
+        <column xsi:type="varchar" name="user_name" default="Guest" comment="User Name"/>
+        <column xsi:type="varchar" name="is_customer" default="No" comment="Is Customer"/>
+        <column xsi:type="boolean" name="status" default="true" comment="Status"/>
+        <column xsi:type="timestamp" name="last_update" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Last Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="user_id"/>
+        </constraint>
+    </table>
+    <table name="codilar_push_notification_template" resource="default" engine="innodb" comment="Codilar Push Notification">
+        <column xsi:type="int" name="template_id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="varchar" name="title" comment="title" length="500"/>
+        <column xsi:type="varchar" name="notification_type" nullable="true"  default="notification" comment="Type of notification"/>
+        <column xsi:type="blob" name="wysiwyg_message" nullable="true" comment="Message"/>
+        <column xsi:type="varchar" name="message" nullable="true" comment="Message" length="1024"/>
+        <column xsi:type="int" name="is_enable" nullable="true"  default="0" comment="isEnable"/>
+        <column xsi:type="varchar" name="redirect_url" nullable="true" comment="Redirect URL" length="1024"/>
+        <column xsi:type="varchar" name="logo" nullable="true" comment="Logo URL" length="1024"/>
+        <column xsi:type="timestamp" name="last_update" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Last Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="template_id"/>
+        </constraint>
+    </table>
+    <table name="codilar_push_notification_order_template" resource="default" engine="innodb" comment="Codilar Push Notification Order Template">
+        <column xsi:type="int" name="template_id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="varchar" name="notification_type" nullable="true"  default="notification" comment="Type of notification"/>
+        <column xsi:type="varchar" name="message" nullable="true" comment="Message" length="1024"/>
+        <column xsi:type="blob" name="wysiwyg_message" nullable="true" comment="Message"/>
+        <column xsi:type="varchar" name="title" nullable="true" comment="Title" length="1024"/>
+        <column xsi:type="varchar" name="logo" nullable="true" comment="Logo URL" length="1024"/>
+        <column xsi:type="int" name="is_enable" nullable="true"  default="0" comment="isEnable"/>
+        <column xsi:type="varchar" name="status" comment="title" length="500"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Last Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="template_id"/>
+        </constraint>
+    </table>
+    <table name="codilar_push_notification_guest_order_token" resource="default" engine="innodb" comment="Codilar Push Notification">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="varchar" name="token" nullable="false" comment="Token" length="500"/>
+        <column xsi:type="varchar" name="order_id" nullable="false" comment="Order Id" length="400"/>
+        <column xsi:type="varchar" name="email" nullable="false" comment="Email" length="400"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    <table name="codilar_push_notification_order_store" resource="default" engine="innodb" comment="Codilar Push Notification Order Store">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="int" name="template_id" nullable="false" comment="Template" padding="10" unsigned="true"/>
+        <column xsi:type="int" name="store_id" nullable="false" comment="Store Id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="PUSH_NOTIFICATION_ORDER_ID_STORE_ID">
+            <column name="template_id"/>
+            <column name="store_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PUSH_NOTIFICATION_ORDER_TEMPLATE_ID_TEMPLATE" table="codilar_push_notification_order_store" column="template_id" referenceTable="codilar_push_notification_order_template" referenceColumn="template_id" onDelete="CASCADE"/>
+    </table>
+</schema>

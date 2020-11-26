@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * events.xml
+ *
+ * @copyright Copyright © 2020 Codilar Technologies Pvt. Ltd.. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_save_after">
+        <observer name="codilat_push_notification_event" instance="Codilar\PushNotification\Observer\CheckOrderStatus" />
+    </event>
+    <event name="checkout_submit_all_after">
+        <observer name="codilat_push_notification_new_order" instance="Codilar\PushNotification\Observer\NewOrder"/>
+    </event>
+</config>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * registered_customer_data.xml
+ *
+ * @copyright Copyright © 2020 Codilar Technologies Pvt. Ltd.. All rights reserved.
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">registered_customer_data.registered_customer_data_data_source</item>
+            <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+            <item name="storageConfig" xsi:type="array">
+                <item name="indexField" xsi:type="string">user_id</item>
+            </item>
+        </item>
+    </argument>
+
+    <settings>
+        <buttons>
+            <button name="back">
+                <url path="admin/index/index"/>
+                <class>primary</class>
+                <label translate="true">Back</label>
+            </button>
+        </buttons>
+        <spinner>cms_block_columns</spinner>
+        <deps>
+            <dep>registered_customer_data.registered_customer_data_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="registered_customer_data_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">user_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Codilar_PushNotification::registered_customer</aclResource>
+        <dataProvider class="Codilar\PushNotification\Ui\Component\RegisteredCustomer\DataProvider" name="registered_customer_data_data_source">
+            <settings>
+                <requestFieldName>user_id</requestFieldName>
+                <primaryFieldName>user_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters"/>
+        <massaction name="listing_massaction">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/tree-massactions</item>
+                </item>
+            </argument>
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to delete selected items?</message>
+                        <title translate="true">Delete items</title>
+                    </confirm>
+                    <url path="*/*/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
+            <action name="template"  class="Codilar\PushNotification\Ui\Component\Listing\MassActions\DynamicAction">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">add-batch</item>
+                        <item name="label" xsi:type="string" translate="true">Templates</item>
+                        <item name="action_resource" xsi:type="object">
+                            Codilar\PushNotification\Ui\DataProvider\TemplateActions
+                        </item>
+                    </item>
+                </argument>
+            </action>
+        </massaction>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="cms_block_columns">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>user_id</indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="user_id" sortOrder="1">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Users #</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="user_name" sortOrder="2">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Customer Name</label>
+            </settings>
+        </column>
+        <column name="is_customer" sortOrder="3">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Is Customer</label>
+            </settings>
+        </column>
+        <column name="email" component="Magento_Ui/js/grid/columns/column" class="Codilar\PushNotification\Ui\Component\Listing\Column\Customer" sortOrder="4">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Email</label>
+            </settings>
+        </column>
+        <column name="customer_group_code" sortOrder="5">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Group</label>
+            </settings>
+        </column>
+        <column name="last_update" sortOrder="6">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Last Updated</label>
+            </settings>
+        </column>
+        <column name="country_id" sortOrder="7">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Country</label>
+            </settings>
+        </column>
+        <column name="status" sortOrder="8">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Account Status</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

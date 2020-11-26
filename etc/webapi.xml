@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * webapi.xml
+ *
+ * @copyright Copyright © 2020 Codilar Technologies Pvt. Ltd.. All rights reserved.
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/push-notification" method="POST">
+        <service class="Codilar\PushNotification\Api\UserManagementInterface" method="setUser"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/delete-existing-token" method="POST">
+        <service class="Codilar\PushNotification\Api\UserManagementInterface" method="removeToken"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

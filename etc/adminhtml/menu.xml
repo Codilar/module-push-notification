@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * menu.xml
+ *
+ * @copyright Copyright © 2020 Codilar Technologies Pvt. Ltd.. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Codilar_PushNotification::menu" title="Push Notification" module="Magento_Backend" sortOrder="10" resource="Codilar_PushNotification::menu" />
+
+        <add id="Codilar_PushNotification::PushNotification" title="Push Notification(Configuration)" translate="title" module="Codilar_PushNotification" sortOrder="100" parent="Codilar_PushNotification::menu" resource="Codilar_PushNotification::PushNotification"/>
+        <add id="Codilar_PushNotification::configuration" title="General Config" translate="title" module="Codilar_PushNotification" sortOrder="100" parent="Codilar_PushNotification::PushNotification" action="adminhtml/system_config/edit/section/codilar_push_notification" resource="Codilar_PushNotification::configuration"/>
+
+        <add id="Codilar_PushNotification::customer" title="Push Notification(Customer and Template)" translate="title" module="Codilar_PushNotification" sortOrder="100" parent="Codilar_PushNotification::menu" resource="Codilar_PushNotification::customer"/>
+
+        <add id="Codilar_PushNotification::registered_customer" title="View Registered Customer" translate="title" module="Codilar_PushNotification" sortOrder="100" parent="Codilar_PushNotification::customer" action="pushnotify/registered/customer" resource="Codilar_PushNotification::registered_customer"/>
+        <add id="Codilar_PushNotification::pushnotify_template" title="View Custom Notification Templates" translate="title" module="Codilar_PushNotification" sortOrder="100" parent="Codilar_PushNotification::customer" action="pushnotify/template/view" resource="Codilar_PushNotification::pushnotify_template"/>
+        <add id="Codilar_PushNotification::pushnotify_order_template" title="View Order Notification Templates" translate="title" module="Codilar_PushNotification" sortOrder="100" parent="Codilar_PushNotification::customer" action="pushnotify/order/view" resource="Codilar_PushNotification::pushnotify_order_template"/>
+    </menu>
+</config>

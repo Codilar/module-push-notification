@@ -1,0 +1,249 @@
+<?php
+/**
+ * @var $block DefaultPushNotification
+ */
+
+use Codilar\PushNotification\Block\DefaultPushNotification;
+
+if ($block->getModuleStatus() && $block->copyContent() && $block->isEnabledForMagento()):?>
+    <?php $manifest = $block->setupManifest();?>
+    <?php if ($manifest['status']):?>
+        <link href="<?= $block->escapeUrl(__($manifest['path']))?>" rel="manifest"/>
+    <?php endif;?>
+    <?php $configData = $block->getConfigData();?>
+    <?php if ($configData['status']):?>
+    <script>
+        require([
+            "jquery",
+            'mage/url',
+            'mage/cookies',
+            'Magento_Customer/js/customer-data',
+            '@firebase/app',
+            '@firebase/messaging'
+        ], function($, url, mageCookie, customerData, firebase) {
+            'use strict';
+            let getCustomerInfo = function () {
+                let customer = customerData.get('customer');
+                return customer();
+            };
+            let isCheckout = <?= $block->isCheckout();?>;
+            let isLoggedIn = function (customerInfo) {
+                customerInfo = customerInfo || getCustomerInfo();
+
+                return customerInfo && customerInfo.firstname;
+            };
+            const firebaseConfig = {
+                apiKey: "<?= $block->escapeJs(__($configData['api_key']))?>",
+                authDomain:"<?= $block->escapeJs(__($configData['auth_dom']))?>",
+                databaseURL: "<?= $block->escapeJs(__($configData['database']))?>",
+                projectId: "<?= $block->escapeJs(__($configData['project']))?>",
+                storageBucket: "<?= $block->escapeJs(__($configData['storage_bucket_id']))?>",
+                messagingSenderId: "<?= $block->escapeJs(__($configData['message_sender_id']))?>",
+                appId: "<?= $block->escapeJs(__($configData['app_id']))?>",
+                measurementId: "<?= $block->escapeJs(__($configData['measurement_id']))?>",
+            };
+            const getLocalStorage = (key) => {
+                let localStorageData = JSON.parse(localStorage.getItem(key));
+                return localStorageData.data;
+            }
+            const setLocalStorage = (key, data) => {
+                let localStorageData;
+                try{
+                    localStorageData = JSON.parse(localStorage.getItem(key))
+                } catch (e) {
+                    localStorageData = [];
+                }
+                if(localStorageData == null || typeof(localStorageData) != typeof(JSON)){
+                    localStorageData = []
+                }
+                localStorageData.data = data;
+                localStorageData.createdAt = Date.now();
+                localStorage.setItem(key, JSON.stringify(localStorageData));
+            }
+
+
+    firebase.initializeApp(firebaseConfig);
+            const messaging = firebase.messaging();
+            messaging.usePublicVapidKey(
+                "<?= $block->escapeJs(__($configData['public_key']))?>"
+                    );
+
+                    let swRegistration;
+                    let isSubscribed;
+
+                    function get_browser_info(){
+                        let ua=navigator.
+                            userAgent,tem,M =
+                            ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+                        if(/trident/i.test(M[1])){
+                            tem=/\brv[ :]+(\d+)/g.exec(ua) || [];
+                            return {name:'IE ',version:(tem[1]||'')};
+                        }
+                        if(M[1]==='Chrome'){
+                            tem=ua.match(/\bOPR\/(\d+)/)
+                            if(tem!=null)   {return {name:'Opera', version:tem[1]};}
+                        }
+                        M=M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+                        if((tem=ua.match(/version\/(\d+)/i))!=null) {M.splice(1,1,tem[1]);}
+                        return {
+                            name: M[0],
+                            version: M[1]
+                        };
+                    }
+                    function saveEndPointForLaterUse(registrationId, endpoint) {
+                        let browser = get_browser_info();
+                        let oldToken = getLocalStorage('oldFirebaseMessagingToken');
+                        setLocalStorage('oldFirebaseMessagingToken',registrationId);
+                        let oneYearFromNow = new Date();
+                        oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+                        $.mage.cookies.clear('oldFirebaseMessagingToken');
+                        $.mage.cookies.set('oldFirebaseMessagingToken',registrationId,{expires: oneYearFromNow});
+
+                        if(!oldToken) {
+                            oldToken = "no_old_tokens_generated";
+                        }
+                            let formData = {
+                                "currentToken":
+                                    [
+                                        {
+                                            "token": oldToken,
+                                            "form_key": $.mage.cookies.get('form_key')
+                                        }
+                                    ]
+                            };
+
+                            let settings = {
+                                "url": "<?= $block->getUrl() . 'rest/V1/delete-existing-token'?>",
+                                "method": "POST",
+                                "headers": {
+                                    "content-type": "application/json",
+                                },
+                                "data": JSON.stringify(formData)
+                            };
+                            $.ajax(settings).done(function (response) {
+                                let formData = {
+                                    "currentToken":
+                                        [
+                                            {
+                                                "token":registrationId,
+                                                "form_key":$.mage.cookies.get('form_key')
+                                            }
+                                        ]
+                                };
+                                let settings = {
+                                    "url": "<?= $block->getUrl() . 'rest/V1/push-notification'?>",
+                                    "method": "POST",
+                                    "headers": {
+                                        "content-type": "application/json",
+                                    },
+                                    "data": JSON.stringify(formData)
+                                };
+
+                                $.ajax(settings).done(function (response) {
+                                    console.log(response);
+                                });
+                            });
+                        }
+
+                    // }
+                    if ('serviceWorker' in navigator && 'PushManager' in window) {
+                        navigator.serviceWorker.register(
+                            BASE_URL + 'firebase-messaging-sw.js',
+                            {scope:'/'}
+                        )
+                            .then(function(registration) {
+                                swRegistration = registration;
+                                initializeUI()
+                            }).catch(function(error) {
+                            console.log(error);
+                        });
+
+                    } else {
+                        console.log('service_workers_are_not_supported_in_this_browser');
+                    }
+
+                    function initializeUI() {
+
+                        messaging.getToken().then(function(currentToken) {
+                            if (currentToken) {
+                                sendTokenToServer(currentToken);
+                            } else {
+                                console.log('No Instance ID token available. Request permission to generate one.');
+                                requestPermission();
+                                setTokenSentToServer(false);
+                            }
+                        }).catch(function(err) {
+                            console.log('An error occurred while retrieving token. ', err);
+
+                            setTokenSentToServer(false);
+                        });
+                    }
+                    function sendTokenToServer(currentToken) {
+
+                        if (!isTokenSentToServer() || isCheckout) {
+                            setTokenSentToServer(true);
+                            saveEndPointForLaterUse(currentToken, currentToken)
+                        } else {
+                            console.log('Token already sent to server so won\'t send it again ' +
+                                'unless it changes');
+                        }
+                    }
+
+                    function isTokenSentToServer() {
+                        return getLocalStorage("firebaseMessagingTokenSentToServer") === '1';
+                    }
+
+                    function setTokenSentToServer(sent) {
+                        setLocalStorage('firebaseMessagingTokenSentToServer', sent ? '1' : '0')
+                    }
+
+                    function subscribeUser() {
+                        const applicationServerKey =  urlB64ToUint8Array(
+                            "<?= $block->escapeJs(__($configData['public_key']))?>"
+                        );
+                        swRegistration.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: applicationServerKey
+                        })
+                            .then(function(subscription) {
+                                console.log(12127,subscription);
+                                var endpoint = subscription.endpoint;
+                                var subscriberId = subscription.endpoint.split("/").slice(-1)[0];
+                                saveEndPointForLaterUse(subscriberId, endpoint);
+                                console.log(13,'User is subscribed.');
+                                isSubscribed = true;
+                            })
+                            .catch(function(err) {
+                                console.log('Failed to subscribe the user: ', err);
+                            });
+                    }
+
+                    function urlB64ToUint8Array(base64String) {
+                        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+                        const base64 = (base64String + padding)
+                            .replace(/-/g, '+')
+                            .replace(/_/g, '/')
+                        ;
+                        const rawData = window.atob(base64);
+                        return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
+                    }
+                    function requestPermission() {
+                        console.log('Requesting permission...');
+
+                        Notification.requestPermission().then(function(permission) {
+                            if (permission === 'granted') {
+                                console.log('Notification permission granted.');
+                                initializeUI();
+
+                            } else {
+                                console.log('Unable to get permission to notify.');
+                            }
+                        });
+                    }
+                });
+            </script>
+            <?php endif;?>
+<?php endif;?>
+
+
+

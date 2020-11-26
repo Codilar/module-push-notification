@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * system.xml
+ *
+ * @copyright Copyright © 2020 Codilar Technologies Pvt. Ltd.. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="codilar_push_notificaion_tab" translate="label" sortOrder="100">
+            <label>Firebase Push Notification</label>
+        </tab>
+        <section id="codilar_push_notification" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>General Configuration</label>
+            <tab>codilar_push_notificaion_tab</tab>
+            <resource>Codilar_PushNotification::configuration</resource>
+            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>General Configuration</label>
+                <hide_in_single_store_mode>1</hide_in_single_store_mode>
+                <field id="module_status" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable The Extension</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>To enable the Extension on Storefront, set Yes to Show on Storefront/set No to Not Show on Storefront</comment>
+                </field>
+                <field id="api_key" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Api Key</label>
+                    <depends>
+                        <field id="module_status">1</field>
+                    </depends>
+                </field>
+                <field id="auth_domain" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Auth Domain</label>
+                    <depends>
+                        <field id="module_status">1</field>
+                    </depends>
+                </field>
+                <field id="database" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Database</label>
+                    <depends>
+                        <field id="module_status">1</field>
+                    </depends>
+                </field>
+                <field id="project_id" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Project ID</label>
+                    <depends>
+                        <field id="module_status">1</field>
+                    </depends>
+                </field>
+                <field id="storage_bucket_id" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Storage Bucket ID</label>
+                    <depends>
+                        <field id="module_status">1</field>
+                    </depends>
+                </field>
+                <field id="message_sender" translate="label" type="password" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Message Sender ID</label>
+                    <depends>
+                        <field id="module_status">1</field>
+                    </depends>
+                </field>
+                <field id="app_id" translate="label" type="password" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>FCM APP ID</label>
+                    <depends>
+                        <field id="module_status">1</field>
+                    </depends>
+                </field>
+                <field id="measurement_id" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Measurement Id</label>
+                    <depends>
+                        <field id="module_status">1</field>
+                    </depends>
+                </field>
+                <field id="server_key" translate="label" type="password" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Server Key</label>
+                    <depends>
+                        <field id="module_status">1</field>
+                    </depends>
+                </field>
+                <field id="public_key" translate="label" type="password" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Public Key</label>
+                    <depends>
+                        <field id="module_status">1</field>
+                    </depends>
+                    <comment>Dashboard > “gear” icon and access “project settings” > Cloud Messaging Section > Your apps(Add Web App if its not present) > Firebase SDK snippet > Fill the above Configuration from the data in the snippet</comment>
+                </field>
+                <field id="send_order_notifications" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Do you want to send notification on order status change?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>To send notification to customer the Extension on change of order status, set Yes to Send Notification / set No to if you dont want to send</comment>
+                    <depends>
+                        <field id="module_status">1</field>
+                    </depends>
+                </field>
+                <field id="codilar_push_notify_default_image" translate="label comment" type="image" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default Image</label>
+                    <backend_model>Codilar\PushNotification\Model\Config\Backend\Image</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">codilar/pushnotify/default</upload_dir>
+                    <base_url type="media" scope_info="1">codilar/pushnotify/default</base_url>
+                    <depends>
+                        <field id="module_status">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="mage_general" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Enable for Magento</label>
+                <field id="module_status" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable The Extension for magento theme</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>To enable the Extension for magento theme on Storefront</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

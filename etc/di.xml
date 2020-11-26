@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * di.xml
+ *
+ * @copyright Copyright © 2020 Codilar Technologies Pvt. Ltd.. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Codilar\PushNotification\Api\UserManagementInterface" type="Codilar\PushNotification\Model\UserManagement" />
+    <preference for="Codilar\PushNotification\Api\Data\CurrentTokenInterface" type="Codilar\PushNotification\Model\CurrentToken" />
+    <preference for="Codilar\PushNotification\Api\TokenManagementInterface" type="Codilar\PushNotification\Model\TokenManagement" />
+    <preference for="Codilar\PushNotification\Api\TemplateManagementInterface" type="Codilar\PushNotification\Model\TemplateManagement" />
+    <preference for="Codilar\PushNotification\Api\OrderTemplateManagementInterface" type="Codilar\PushNotification\Model\OrderTemplateManagement" />
+    <preference for="Codilar\PushNotification\Api\OrderTokenManagementInterface" type="Codilar\PushNotification\Model\OrderTokenManagement" />
+    <preference for="Codilar\PushNotification\Api\OrderTemplateStoreManagementInterface" type="Codilar\PushNotification\Model\OrderTemplateStoreManagement" />
+    <type name="Codilar\PushNotification\Controller\Adminhtml\Image\SaveImage">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">Magento\Catalog\CategoryImageUpload</argument>
+        </arguments>
+    </type>
+    <virtualType name="Codilar\PushNotification\LogoImage" type="Magento\Catalog\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">pushnotify/tmp/logo</argument>
+            <argument name="basePath" xsi:type="string">pushnotify/logo</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Codilar\PushNotification\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Codilar\PushNotification\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">PushNotificationLogger</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Codilar\PushNotification\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

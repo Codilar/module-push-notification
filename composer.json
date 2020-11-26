@@ -1,0 +1,23 @@
+{
+  "name": "codilar/module-push-notification",
+  "description": "Module Push Notification",
+  "type": "magento2-module",
+  "license": "proprietary",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "email": "ankith@codilar.com",
+      "name": "ankith"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Codilar\\PushNotification\\": ""
+    },
+    "files": [
+      "registration.php"
+    ]
+  }
+}

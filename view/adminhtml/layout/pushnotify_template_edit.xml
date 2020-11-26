@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * pushnotify_template_edit.xml
+ *
+ * @copyright Copyright © 2020 Codilar Technologies Pvt. Ltd.. All rights reserved.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <link src="Codilar_PushNotification::js/template.js"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <uiComponent name="template_add_ui"/>
+        </referenceContainer>
+    </body>
+</page>
