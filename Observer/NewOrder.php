@@ -146,7 +146,7 @@ class NewOrder implements ObserverInterface
 
         /** @var Order $order */
         $order = $observer->getEvent()->getOrder();
-        $previousStatus = $order->getOrigData()['status'];
+        $previousStatus = $order->getOrigData()['status'] ?? null;
         $orderId = $order->getIncrementId();
         $tokenFromCookie = $this->cookieManager->getCookie('oldFirebaseMessagingToken');
         $pwaFirebaseTokenFromCookie = $this->cookieManager->getCookie('pwa.oldFirebaseMessagingToken');
