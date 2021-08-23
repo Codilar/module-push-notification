@@ -11,7 +11,7 @@ use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
 
 /**
- * class Thumbnail
+ * class TemplateThumbnail
  *
  * @description Thumbnail for Template Grid
  * @author   Codilar Team Player <ankith@codilar.com>
@@ -22,7 +22,7 @@ use Magento\Ui\Component\Listing\Columns\Column;
  * Thumbnail for Template Grid
  */
 
-class Thumbnail extends Column
+class TemplateThumbnail extends Column
 {
     /**
      * @var UrlInterface
@@ -75,8 +75,12 @@ class Thumbnail extends Column
                                             ->addFieldToFilter('template_id', $item["template_id"])
                                             ->getColumnValues('store_id');
                 $item[$fieldName . '_src'] = $item['logo'];
-                $item[$fieldName . '_alt'] = $item['logo'];
+                $item[$fieldName . '_alt'] = $item['title'];
                 $item[$fieldName . '_orig_src'] = $item['logo'];
+                $item[$fieldName . '_link'] = $this->urlBuilder->getUrl(
+                    'pushnotify/template/edit',
+                    ['template_id' => $item['template_id'], 'store' => $this->context->getRequestParam('store')]
+                );
             }
         }
         return $dataSource;
